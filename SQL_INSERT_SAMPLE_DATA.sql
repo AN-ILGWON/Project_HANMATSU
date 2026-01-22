@@ -101,15 +101,15 @@ VALUES (hm_board_seq.NEXTVAL, 'tabetai_san', '灯祭りの屋台料理選手権�
 INSERT INTO hm_board (bno, userid, title, content, views, likes, regdate, category) 
 VALUES (hm_board_seq.NEXTVAL, 'superadmin', '【お知らせ】2026年度版お祭りカレンダー公開', '日本の皆様向けに、2026年の主要なお祭りをカレンダーにまとめました。旅行の計画にお役立てください！', 500, 100, SYSDATE, 'notice');
 
--- ニュースサンプルデータ
-INSERT INTO hm_news (nno, title, category, regdate, link_url) 
-VALUES (hm_news_seq.NEXTVAL, '2026年韓国旅行の最新トレンドは「地域密着型」', 'Trend', SYSDATE, 'https://japanese.visitkorea.or.kr/');
+-- ニュースサンプルデータ (最新)
+INSERT INTO hm_news (nno, title, category, content, imgfile, link_url, regdate) 
+VALUES (hm_news_seq.NEXTVAL, '2026年、韓国各地で大型地域祭り開催へ　外国人観光客誘致に期待', '祭典', '韓国各地の自治体は2026年、地域の特色を生かした大型祭りを相次いで開催する予定だ。文化体育観光部と地方自治体は、外国人観光客の誘致と地域経済の活性化を目的に、祭りを観光資源として積極的に活用している。', 'news/69e374dd-94ac-4129-be7b-6aa0f7159d2e_축제1.jpg', NULL, CURRENT_TIMESTAMP);
 
-INSERT INTO hm_news (nno, title, category, regdate, link_url) 
-VALUES (hm_news_seq.NEXTVAL, 'K-ETAの申請方法がさらに簡素化されました', 'Notice', SYSDATE, 'https://www.k-eta.go.kr/');
+INSERT INTO hm_news (nno, title, category, content, imgfile, link_url, regdate) 
+VALUES (hm_news_seq.NEXTVAL, '高速鉄道の利便性向上、韓国旅行가 より身近に', '旅行', '韓国では高速鉄道網の発達により、国内移動の利便性が大きく向上している。', 'news/5871c9a7-d199-492b-9ba0-931007c3a128_ktx.jpg', NULL, CURRENT_TIMESTAMP);
 
-INSERT INTO hm_news (nno, title, category, regdate, link_url) 
-VALUES (hm_news_seq.NEXTVAL, 'ソウル直通列車の運行本数が拡大されます', 'Transport', SYSDATE, 'https://www.arex.or.kr/');
+INSERT INTO hm_news (nno, title, category, content, imgfile, link_url, regdate) 
+VALUES (hm_news_seq.NEXTVAL, '日本人観光客が再注目、近距離海外としての韓国旅行', '旅行', '日本人観光客の間で、韓国旅行への関心が再び高まっている。', 'news/23466f67-8c4c-4d0e-a193-7a48899c27b3_비짓코리아.png', NULL, CURRENT_TIMESTAMP);
 
 -- バナーサンプルデータ
 INSERT INTO hm_banner (bano, title, subtitle, imgfile, link_url, order_no, is_active) 

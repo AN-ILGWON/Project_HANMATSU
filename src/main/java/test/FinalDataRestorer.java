@@ -249,26 +249,48 @@ public class FinalDataRestorer {
                 pstmt.executeUpdate();
             }
 
-            // 7. Insert News (USER'S LATEST EDITS)
-            String newsSql = "INSERT INTO hm_news (nno, category, title, content, imgfile, regdate) VALUES (hm_news_seq.NEXTVAL, ?, ?, ?, ?, SYSDATE)";
+            // 7. Insert News (USER'S LATEST NEWS)
+            String newsSql = "INSERT INTO hm_news (nno, title, category, content, imgfile, link_url, regdate) VALUES (hm_news_seq.NEXTVAL, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
             try (PreparedStatement pstmt = conn.prepareStatement(newsSql)) {
-                // News 1
-                pstmt.setString(1, "Trend");
-                pstmt.setString(2, "2026年韓国旅行の最新トレンドは「地域密着型」");
-                pstmt.setString(3, "2026年の韓国旅行は、有名な観光地だけでなく、その土地ならではの文化や祭りを体験する「地域密着型」が注目されています。");
-                pstmt.setString(4, "news/aea2fda0-568f-405f-8127-5a78ce851614_비자면제.jpg");
-                pstmt.executeUpdate();
-
-                // News 2
-                pstmt.setString(1, "Notice");
-                pstmt.setString(2, "K-ETAの申請方法がさらに簡素化されました");
-                pstmt.setString(3, "韓国入国に必要な電子渡航許可（K-ETA）の申請プロセスがより分かりやすく、簡素化されました。事前の確認をお忘れなく！");
-                pstmt.setString(4, "news/3e349da0-8883-42f3-8ee9-ae36770738ed_비자면제.jpg");
-                pstmt.executeUpdate();
+                String[][] newsItems = {
+                    {
+                        "2026年、韓国各地で大型地域祭り開催へ　外国人観光客誘致に期待", "祭典", 
+                        "韓国各地の自治体は2026年、地域の特色を生かした大型祭りを相次いで開催する予定だ。文化体育観光部と地方自治体は、外国人観光客の誘致と地域経済の活性化を目的に、祭りを観光資源として積極的に活用している。\n\nソウルでは伝統文化と現代コンテンツを融合させた都市型フェスティバルが予定されており、伝統公演、夜間イベント、体験型プログラムなどが企画されている。地方都市でも、地域の歴史や自然, 食文化をテーマにした祭りが開催される見通しだ。\n\n特に日本人観光客向けには、日本語案内の充実や高速鉄道を利用したアクセスの良さを強調した広報が行われる予定で、2026年は「祭りを目的とした韓国旅行」がさらに注目される年になりそうだ。", 
+                        "news/69e374dd-94ac-4129-be7b-6aa0f7159d2e_축제1.jpg", null
+                    },
+                    {
+                        "高速鉄道の利便性向上、韓国旅行がより身近に", "旅行", 
+                        "韓国では高速鉄道網の発達により、国内移動の利便性が大きく向上している。ソウルと地方主要都市を結ぶKTX（韓国高速鉄道）は、観光客の移動手段として欠かせない存在となっている。\n\n仁川国際空港からソウル市内へは空港鉄道が運行されており、到着後すぐに高速鉄道へ乗り継ぐことが可能だ。これにより、日本人観光客は短時間で釜山や大邱、光州などの地方都市へ移動できるようになった。\n\n特に釜山まではソウルから約2時間半で到着でき、日程の限られた旅行者にとって大きなメリットとなっている。交通インフラの整備は、韓国旅行の満足度向上につながっており、今後さらなる利用拡大が期待されている。", 
+                        "news/5871c9a7-d199-492b-9ba0-931007c3a128_ktx.jpg", null
+                    },
+                    {
+                        "日本人観光客が再注目、近距離海外としての韓国旅行", "旅行", 
+                        "日本人観光客の間で、韓国旅行への関心が再び高まっている。短い移動時間と手頃な旅行費用に加え、食文化やエンターテインメントの多様性が評価されている。\n\nソウルでは、景福宮や北村韓屋村などの伝統的な観光地に加え、カフェ巡りやショッピングを楽しむ若者層の姿が多く見られる。特にK-POPや韓国ドラマの影響により、関連スポットを訪れる「聖地巡礼型観光」が人気を集めている。\n\nまた、日本語対応が可能な店舗や案内表示が増えており、海外旅行に不慣れな人でも安心して訪問できる環境が整っている点も、旅行先として選ばれる理由の一つだ。今後も近距離海外旅行の選択肢として、韓国の存在感はさらに高まると予想されている。", 
+                        "news/23466f67-8c4c-4d0e-a193-7a48899c27b3_비짓코리아.png", null
+                    },
+                    {
+                        "2026年韓国旅行の最新トレンドは「地域密着型」", "旅行", 
+                        "2026年の韓国旅行は、有名な観光地だけでなく、その土地ならではの文化や祭りを体験する「地域密着型」が注目されています。", 
+                        "news/3f6fd4f8-d77a-4a2f-bc34-cfb971fddb00_온천_배너.pg.jpg", null
+                    },
+                    {
+                        "K-ETAの申請方法がさらに簡素化されました", "Notice", 
+                        "韓国入国に必要な電子渡航許可（K-ETA）の申請プロセスがより分かりやすく、簡素化されました。事前の確認をお忘れなく！", 
+                        "news/3e349da0-8883-42f3-8ee9-ae36770738ed_비자면제.jpg", null
+                    }
+                };
+                for (String[] n : newsItems) {
+                    pstmt.setString(1, n[0]);
+                    pstmt.setString(2, n[1]);
+                    pstmt.setString(3, n[2]);
+                    pstmt.setString(4, n[3]);
+                    pstmt.setString(5, n[4]);
+                    pstmt.executeUpdate();
+                }
             }
 
             conn.commit();
-            System.out.println("Final restoration complete! (UTF-8 safe)");
+            System.out.println("Final Data Restoration Complete!");
         } catch (Exception e) {
             e.printStackTrace();
         }
