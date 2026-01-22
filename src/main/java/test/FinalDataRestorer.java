@@ -7,7 +7,7 @@ public class FinalDataRestorer {
         try (Connection conn = DBManager.getInstance()) {
             conn.setAutoCommit(false);
             
-            // 1. Clear Tables
+            // 기존 테이블 데이터 초기화
             String[] tables = {
                 "hm_reply", "hm_board_like", "hm_wishlist", "hm_visited",
                 "hm_board", "hm_festival", "hm_news", "hm_banner",
@@ -18,9 +18,9 @@ public class FinalDataRestorer {
                     stmt.executeUpdate("DELETE FROM " + table);
                 }
             }
-            System.out.println("All tables cleared.");
+            System.out.println("기존 테이블 데이터 삭제 완료.");
 
-            // 2. Insert Members (from DataRestorer)
+            // 테스트용 회원 데이터 추가
             String memberSql = "INSERT INTO hm_member (userid, password, nickname, email, phone, last_name_kanji, first_name_kanji, last_name_kana, first_name_kana, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(memberSql)) {
                 Object[][] members = {
@@ -36,11 +36,11 @@ public class FinalDataRestorer {
                 }
             }
 
-            // 3. Insert Categories
+            // 카테고리 설정
             String catSql = "INSERT INTO hm_category (cno, name, type) VALUES (hm_category_seq.NEXTVAL, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(catSql)) {
                 String[][] categories = {
-                    {"祭りレビュー", "BOARD"}, {"自由掲示板", "BOARD"}, {"Q&A", "BOARD"},
+                    {"祭りレビュー", "BOARD"}, {"自由掲示판", "BOARD"}, {"Q&A", "BOARD"},
                     {"お知らせ", "BOARD"}, {"Trend", "NEWS"}, {"Notice", "NEWS"}
                 };
                 for (String[] c : categories) {
@@ -49,7 +49,7 @@ public class FinalDataRestorer {
                 }
             }
 
-            // 4. Insert Banners (USER'S LATEST EDITS with corrected filenames)
+            // 메인 배너 데이터 (이미지 경로 수정 반영)
             String bannerSql = "INSERT INTO hm_banner (bano, title, subtitle, imgfile, link_url, order_no, is_active) VALUES (hm_banner_seq.NEXTVAL, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(bannerSql)) {
                 // Banner 1 - Cherry Blossom (Fixed UUID)
@@ -89,7 +89,7 @@ public class FinalDataRestorer {
                 pstmt.executeUpdate();
             }
 
-            // 5. Insert Board Posts (USER'S LATEST EDITS)
+            // 게시판 샘플 포스팅
             String boardSql = "INSERT INTO hm_board (bno, userid, category, title, content, imgfile, regdate, views, likes) VALUES (hm_board_seq.NEXTVAL, ?, ?, ?, ?, ?, SYSDATE, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(boardSql)) {
                 // Post 1 - Cherry Blossom
@@ -133,7 +133,7 @@ public class FinalDataRestorer {
                 pstmt.executeUpdate();
             }
 
-            // 6. Insert Festivals (NEW: Fix empty main page)
+            // 축제 상세 정보 등록
             String festSql = "INSERT INTO hm_festival (fno, region, name, description, start_date, end_date, location, imgfile, views, regdate, homepage, instagram, map_url, likes, is_recommended) VALUES (hm_festival_seq.NEXTVAL, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?, SYSDATE, ?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(festSql)) {
                 // Festival 1 - Jinhae Cherry Blossom (Recommended)
@@ -249,7 +249,7 @@ public class FinalDataRestorer {
                 pstmt.executeUpdate();
             }
 
-            // 7. Insert News (USER'S LATEST NEWS)
+            // 최신 뉴스 데이터 등록
             String newsSql = "INSERT INTO hm_news (nno, title, category, content, imgfile, link_url, regdate) VALUES (hm_news_seq.NEXTVAL, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
             try (PreparedStatement pstmt = conn.prepareStatement(newsSql)) {
                 String[][] newsItems = {
@@ -290,7 +290,7 @@ public class FinalDataRestorer {
             }
 
             conn.commit();
-            System.out.println("Final Data Restoration Complete!");
+            System.out.println("모든 샘플 데이터 복구 성공!");
         } catch (Exception e) {
             e.printStackTrace();
         }
