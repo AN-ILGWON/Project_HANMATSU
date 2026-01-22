@@ -17,3 +17,11 @@ data_counts.txt
 /src/main/webapp/upload/
 .DS_Store
 Thumbs.db
+
+# Eclipse
+.settings/
+.classpath
+.project
+
+# Compiled classes
+src/main/webapp/WEB-INF/classes/
