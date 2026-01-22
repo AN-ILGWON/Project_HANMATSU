@@ -19,19 +19,44 @@ public class FestivalList implements Command {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-		int pageSize = 12; // 3 columns * 4 rows
+		String pageStr = request.getParameter("page");
+		String status = request.getParameter("status");
+		String keyword = request.getParameter("keyword");
+		System.out.println("[FestivalList] params - page: " + pageStr + ", status: " + status + ", keyword: " + keyword);
 		
+		int page = 1;
+		try {
+			if (pageStr != null && !pageStr.isEmpty()) {
+				page = Integer.parseInt(pageStr);
+			}
+		} catch (NumberFormatException e) {
+			System.err.println("[FestivalList] Invalid page number: " + pageStr);
+			page = 1;
+		}
+		
+		int pageSize = 12; // 3 columns * 4 rows
 		FestivalDao dao = new FestivalDao();
-		List<FestivalDto> festivalList = dao.getFestivalsByPage(page, pageSize);
-		int totalCount = dao.getFestivalCount();
-		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+		
+		System.out.println("[FestivalList] Calling getFestivalsByPage...");
+		List<FestivalDto> festivalList = dao.getFestivalsByPage(page, pageSize, status, keyword);
+		if (festivalList == null) {
+			festivalList = new java.util.ArrayList<>();
+		}
+		System.out.println("[FestivalList] festivalList size: " + festivalList.size());
+		
+		System.out.println("[FestivalList] Calling getFestivalCount...");
+		int totalCount = dao.getFestivalCount(status, keyword);
+		System.out.println("[FestivalList] totalCount: " + totalCount);
+		
+		int totalPages = (totalCount > 0) ? (int) Math.ceil((double) totalCount / pageSize) : 1;
 		
 		request.setAttribute("festivalList", festivalList);
 		request.setAttribute("currentPage", page);
 		request.setAttribute("totalPages", totalPages);
 		request.setAttribute("totalCount", totalCount);
 		request.setAttribute("pageSize", pageSize);
+		request.setAttribute("status", status);
+		request.setAttribute("keyword", keyword);
 	}
 }
 

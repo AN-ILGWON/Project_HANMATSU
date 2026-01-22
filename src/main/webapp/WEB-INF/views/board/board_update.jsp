@@ -12,9 +12,9 @@
 			<div class="form_group">
 				<label for="category">カテゴリー</label>
 				<select id="category" name="category" required class="form_select">
-					<option value="祭りレビュー" ${board.category == '祭りレビュー' ? 'selected' : ''}>祭りレビュー</option>
-					<option value="自由掲示板" ${board.category == '自由掲示板' ? 'selected' : ''}>自由掲示板</option>
-					<option value="Q&A" ${board.category == 'Q&A' ? 'selected' : ''}>Q&A</option>
+					<c:forEach var="cat" items="${categoryList}">
+						<option value="${cat.name}" ${board.category == cat.name ? 'selected' : ''}>${cat.name}</option>
+					</c:forEach>
 				</select>
 			</div>
 
@@ -29,7 +29,7 @@
                     <c:if test="${not empty board.imgfile}">
                         <div class="current_img_box" id="currentImageWrapper">
                             <p>現在の画像:</p>
-                            <img src="${pageContext.request.contextPath}/display.do?name=${board.imgfile}" alt="Current Image" style="max-width: 150px; border-radius: 8px;">
+                            <img src="${pageContext.request.contextPath}/display.do?name=${board.imgfile}" alt="Current Image">
                         </div>
                     </c:if>
                     <input type="file" id="imgfile" name="imgfile" accept="image/*" onchange="previewImage(this)">
@@ -41,7 +41,7 @@
 			
 			<div class="form_group">
 				<label for="content">内容</label>
-				<textarea id="content" name="content" placeholder="内容を入力してください" required>${board.content}</textarea>
+				<textarea id="content" name="content" placeholder="内容を入力してください">${board.content}</textarea>
 			</div>
 			
 			<div class="form_actions">
@@ -53,6 +53,24 @@
 </div>
 
 <script>
+$(document).ready(function() {
+    $('#content').summernote({
+        placeholder: '内容を入力してください',
+        tabsize: 2,
+        height: 400,
+        lang: 'ja-JP',
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ]
+    });
+});
+
 function previewImage(input) {
     const preview = document.getElementById('imagePreview');
     const currentImg = document.getElementById('currentImageWrapper');
@@ -60,7 +78,7 @@ function previewImage(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">`;
+            preview.innerHTML = `<img src="${e.target.result}">`;
             if(currentImg) currentImg.style.opacity = '0.5';
         }
         reader.readAsDataURL(input.files[0]);
@@ -70,9 +88,5 @@ function previewImage(input) {
     }
 }
 </script>
-
-<style>
-/* style.cssで共通管理 */
-</style>
 
 <%@ include file="/footer.jsp" %>

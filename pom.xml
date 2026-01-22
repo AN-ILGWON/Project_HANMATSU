@@ -28,9 +28,14 @@
 
     <!-- JSTL -->
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-      <version>1.2</version>
+      <groupId>org.apache.taglibs</groupId>
+      <artifactId>taglibs-standard-spec</artifactId>
+      <version>1.2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.taglibs</groupId>
+      <artifactId>taglibs-standard-impl</artifactId>
+      <version>1.2.5</version>
     </dependency>
 
     <!-- JSON -->
@@ -53,6 +58,13 @@
         <version>2.3.3</version>
         <scope>provided</scope>
     </dependency>
+
+    <!-- File Upload (cos.jar) -->
+    <dependency>
+        <groupId>servlets.com</groupId>
+        <artifactId>cos</artifactId>
+        <version>05Nov2002</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -73,9 +85,9 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>9.4.44.v20210927</version>
         <configuration>
-          <scanIntervalSeconds>10</scanIntervalSeconds>
-          <httpConnector>
-            <port>8083</port>
+            <scanIntervalSeconds>0</scanIntervalSeconds>
+            <httpConnector>
+            <port>8893</port>
           </httpConnector>
           <webApp>
             <contextPath>/hanmatsu</contextPath>

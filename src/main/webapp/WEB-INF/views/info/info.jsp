@@ -7,7 +7,7 @@
         <div class="info_content">
             ${content}
         </div>
-        <div style="text-align: center;">
+        <div class="text_center">
             <a href="javascript:history.back();" class="btn_back">戻る</a>
         </div>
     </div>

@@ -41,7 +41,7 @@ public class FestivalView implements Command {
 		String userid = (String) session.getAttribute("userid");
 		if (userid != null && dto != null) {
 			new VisitedDao().insertVisited(userid, String.valueOf(fno), dto.getName());
-			// 찜 여부 확인
+			// お気に入り登録の有無を確認
 			boolean isWished = model.WishlistDao.getInstance().isWished(userid, fno);
 			request.setAttribute("isWished", isWished);
 		}

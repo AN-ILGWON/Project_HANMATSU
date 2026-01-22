@@ -39,7 +39,9 @@ public class FestivalWrite implements Command {
 		String endDate = request.getParameter("endDate");
 		String location = request.getParameter("location");
 		String homepage = request.getParameter("homepage");
+		String instagram = request.getParameter("instagram");
 		String mapUrl = request.getParameter("mapUrl");
+		int likes = Integer.parseInt(request.getParameter("likes") != null && !request.getParameter("likes").isEmpty() ? request.getParameter("likes") : "0");
 		
 		System.out.println("[INFO] FestivalWrite: Request received. Region=" + region + ", Name=" + name);
 		
@@ -88,7 +90,9 @@ public class FestivalWrite implements Command {
 		dto.setLocation(location);
 		dto.setImgfile(fileName);
 		dto.setHomepage(homepage);
+		dto.setInstagram(instagram);
 		dto.setMapUrl(mapUrl);
+		dto.setLikes(likes);
 		
 		int result = new FestivalDao().festivalInsert(dto);
 		

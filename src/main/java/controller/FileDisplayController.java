@@ -7,23 +7,32 @@ import java.io.OutputStream;
 import java.net.URLConnection;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import util.FileConfig;
 
+@WebServlet("/display.do")
 public class FileDisplayController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String fileName = request.getParameter("name");
-        if (fileName == null || fileName.isEmpty()) return;
+        if (fileName == null || fileName.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
-        // 外部の絶対パスからファイルオブジェクトを作成
-        File file = new File(FileConfig.UPLOAD_PATH, fileName);
+        // Normalize the path for the current OS
+        String normalizedFileName = fileName.replace("/", File.separator).replace("\\", File.separator);
+        File file = new File(FileConfig.UPLOAD_PATH, normalizedFileName);
 
-        if (!file.exists()) {
+        System.out.println("[FileDisplayController] Requesting file: " + fileName + " -> " + file.getAbsolutePath());
+
+        if (!file.exists() || !file.isFile()) {
+            System.err.println("[FileDisplayController] File not found: " + file.getAbsolutePath());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }

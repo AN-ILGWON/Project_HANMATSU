@@ -8,37 +8,37 @@
 4. `C:\jspstudy26\hanmatsu` フォルダを選択
 5. `Finish` をクリック
 
-## 2. 必要なライブラリの追加
+## 2. 依存関係の解決 (Maven)
 
-`src/main/webapp/WEB-INF/lib/` フォルダに以下の JAR ファイルをコピーしてください：
+このプロジェクトは Maven を使用しているため、ライブラリは自動的にダウンロードされます。
 
-### 必須ライブラリ
-- `ojdbc8.jar` - Oracle JDBC ドライバー
-- `jbcrypt-0.4.jar` - パスワード暗号化
-- `jstl.jar` - JSTL ライブラリ
-- `standard.jar` - JSTL 標準ライブラリ
+1. プロジェクトを右クリック → `Maven` → `Update Project`
+2. `Force Update of Snapshots/Releases` にチェックを入れて `OK` をクリック
 
-### ライブラリの場所
-- `jslhrd_final_round/src/main/webapp/WEB-INF/lib/` フォルダからコピー可能
-- または直接ダウンロード
+※ Oracle JDBC ドライバー（ojdbc8）などの依存関係は `pom.xml` に定義されています。
 
 ## 3. プロジェクトの設定
 
 ### 3.1 Java バージョンの確認
 - プロジェクトを右クリック → `Properties` → `Java Build Path` → `Libraries`
-- JavaSE-21 を確認
+- JavaSE-11 を確認
 
 ### 3.2 Project Facets の設定
 - プロジェクトを右クリック → `Properties` → `Project Facets`
 - 以下の項目にチェック：
-  - Java (21)
+  - Java (11)
   - Dynamic Web Project (4.0)
   - JavaScript (1.0)
 
 ### 3.3 Deployment Assembly の設定
 - プロジェクトを右クリック → `Properties` → `Deployment Assembly`
-- `WEB-INF/lib` フォルダが含まれているか確認
+- `Maven Dependencies` が `/WEB-INF/lib` パスに追加されているか確認してください。
+- もし追加されていない場合: `Add...` → `Java Build Path Entries` → `Maven Dependencies` → `Finish`
 
+### 3.4 ライブラリ認識の問題 (ClassNotFoundException) の解決
+- Eclipse のメニューから `Project` → `Clean...` を実行してください。
+- `Servers` タブで Tomcat サーバーを右クリック → `Clean...` を実行し、デプロイデータを初期化してください。
+- サーバーを再起動します。
 ## 4. データベースの設定
 
 ### 4.1 Oracle DB 接続の確認

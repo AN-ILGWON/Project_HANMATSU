@@ -9,6 +9,7 @@ public class ReplyDto {
 	private String content; // コメント内容
 	private String regdate; // 登録日
 	private String boardTitle; // 投稿タイトル (マイページ用)
+	private String profileImg; // プロフィール画像
 	
 	public int getRno() {
 		return rno;
@@ -51,6 +52,12 @@ public class ReplyDto {
 	}
 	public void setBoardTitle(String boardTitle) {
 		this.boardTitle = boardTitle;
+	}
+	public String getProfileImg() {
+		return profileImg;
+	}
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
 	}
 }
 

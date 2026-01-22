@@ -22,7 +22,7 @@ public class ReplyDelete implements Command {
 		String userid = (String) session.getAttribute("userid");
 		
 		if(userid == null) {
-			response.sendRedirect("/member/login.do");
+			response.sendRedirect(request.getContextPath() + "/member/login.do");
 			return;
 		}
 		
@@ -40,7 +40,7 @@ public class ReplyDelete implements Command {
 		
 		new ReplyDao().replyDelete(rno);
 		
-		response.sendRedirect("/board/view.do?bno=" + bno);
+		response.sendRedirect(request.getContextPath() + "/board/view.do?bno=" + bno);
 	}
 }
 

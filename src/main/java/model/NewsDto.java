@@ -7,6 +7,7 @@ public class NewsDto {
     private String regdate;
     private String imgfile;
     private String linkUrl;
+    private String content;
 
     public int getNno() { return nno; }
     public void setNno(int nno) { this.nno = nno; }
@@ -20,4 +21,6 @@ public class NewsDto {
     public void setImgfile(String imgfile) { this.imgfile = imgfile; }
     public String getLinkUrl() { return linkUrl; }
     public void setLinkUrl(String linkUrl) { this.linkUrl = linkUrl; }
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
 }

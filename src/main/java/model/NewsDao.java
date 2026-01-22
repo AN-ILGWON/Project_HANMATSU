@@ -16,7 +16,7 @@ public class NewsDao {
         
         String sql = "SELECT * FROM ( " +
                     "    SELECT ROWNUM rn, aaa.* FROM ( " +
-                    "    SELECT * FROM hm_news ORDER BY nno DESC) aaa " +
+                    "    SELECT nno, title, category, TO_CHAR(regdate, 'YYYY-MM-DD') as regdate, imgfile, link_url, content FROM hm_news ORDER BY nno DESC) aaa " +
                     "    WHERE ROWNUM <= ?) " +
                     "WHERE rn > ?";
         
@@ -35,6 +35,7 @@ public class NewsDao {
                 dto.setRegdate(rs.getString("regdate"));
                 dto.setImgfile(rs.getString("imgfile"));
                 dto.setLinkUrl(rs.getString("link_url"));
+                dto.setContent(rs.getString("content"));
                 list.add(dto);
             }
         } catch (Exception e) {
@@ -70,7 +71,7 @@ public class NewsDao {
         ResultSet rs = null;
         List<NewsDto> list = new ArrayList<>();
         
-        String sql = "SELECT * FROM hm_news ORDER BY nno DESC";
+        String sql = "SELECT nno, title, category, TO_CHAR(regdate, 'YYYY-MM-DD') as regdate, imgfile, link_url, content FROM hm_news ORDER BY nno DESC";
         
         try {
             conn = DBManager.getInstance();
@@ -85,56 +86,110 @@ public class NewsDao {
                 dto.setRegdate(rs.getString("regdate"));
                 dto.setImgfile(rs.getString("imgfile"));
                 dto.setLinkUrl(rs.getString("link_url"));
+                dto.setContent(rs.getString("content"));
                 list.add(dto);
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                if(rs != null) rs.close();
-                if(pstmt != null) pstmt.close();
-                if(conn != null) conn.close();
-            } catch (Exception e) { }
+            DBManager.close(conn, pstmt, rs);
         }
         return list;
     }
 
-    public void insertNews(NewsDto dto) {
-        String sql = "INSERT INTO hm_news (nno, title, category, imgfile, link_url) VALUES (hm_news_seq.NEXTVAL, ?, ?, ?, ?)";
-        try (Connection conn = DBManager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, dto.getTitle());
-            pstmt.setString(2, dto.getCategory());
-            pstmt.setString(3, dto.getImgfile());
-            pstmt.setString(4, dto.getLinkUrl());
-            pstmt.executeUpdate();
+    public int insertNews(NewsDto dto) {
+        String sql = "INSERT INTO hm_news (nno, title, category, imgfile, link_url, content) VALUES (hm_news_seq.NEXTVAL, ?, ?, ?, ?, ?)";
+        System.out.println("[NewsDao] Attempting to insert news: " + dto.getTitle());
+        try (Connection conn = DBManager.getInstance()) {
+            if (conn == null) {
+                System.err.println("[NewsDao] Error: Database connection is null");
+                return 0;
+            }
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, dto.getTitle());
+                pstmt.setString(2, dto.getCategory());
+                pstmt.setString(3, dto.getImgfile());
+                pstmt.setString(4, dto.getLinkUrl());
+                pstmt.setString(5, dto.getContent());
+                
+                int result = pstmt.executeUpdate();
+                System.out.println("[NewsDao] Insert successful. Rows affected: " + result);
+                return result;
+            }
         } catch (Exception e) {
+            System.err.println("[NewsDao] Error during insertNews: " + e.getMessage());
             e.printStackTrace();
+            return -1; // 에러 발생 시 -1 반환하여 구분
         }
     }
 
-    public void deleteNews(int nno) {
+    public int deleteNews(int nno) {
         String sql = "DELETE FROM hm_news WHERE nno = ?";
-        try (Connection conn = DBManager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, nno);
-            pstmt.executeUpdate();
+        try (Connection conn = DBManager.getInstance()) {
+            if (conn == null) return 0;
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, nno);
+                return pstmt.executeUpdate();
+            }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int updateNews(NewsDto dto) {
+        String sql = "UPDATE hm_news SET title = ?, category = ?, link_url = ?, content = ?, imgfile = ? WHERE nno = ?";
+        System.out.println("[NewsDao] Attempting to update news nno: " + dto.getNno());
+        try (Connection conn = DBManager.getInstance()) {
+            if (conn == null) {
+                System.err.println("[NewsDao] Error: Database connection is null during update");
+                return 0;
+            }
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, dto.getTitle());
+                pstmt.setString(2, dto.getCategory());
+                pstmt.setString(3, dto.getLinkUrl());
+                pstmt.setString(4, dto.getContent());
+                pstmt.setString(5, dto.getImgfile());
+                pstmt.setInt(6, dto.getNno());
+                
+                int result = pstmt.executeUpdate();
+                System.out.println("[NewsDao] Update successful. Rows affected: " + result);
+                return result;
+            }
+        } catch (Exception e) {
+            System.err.println("[NewsDao] Error during updateNews: " + e.getMessage());
+            e.printStackTrace();
+            return -1;
         }
     }
 
-    public void updateNews(NewsDto dto) {
-        String sql = "UPDATE hm_news SET title = ?, category = ?, link_url = ? WHERE nno = ?";
-        try (Connection conn = DBManager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, dto.getTitle());
-            pstmt.setString(2, dto.getCategory());
-            pstmt.setString(3, dto.getLinkUrl());
-            pstmt.setInt(4, dto.getNno());
-            pstmt.executeUpdate();
+    public NewsDto getNewsByNno(int nno) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        NewsDto dto = null;
+        String sql = "SELECT nno, title, category, TO_CHAR(regdate, 'YYYY-MM-DD') as regdate, imgfile, link_url, content FROM hm_news WHERE nno = ?";
+        try {
+            conn = DBManager.getInstance();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, nno);
+            rs = pstmt.executeQuery();
+            if(rs.next()) {
+                dto = new NewsDto();
+                dto.setNno(rs.getInt("nno"));
+                dto.setTitle(rs.getString("title"));
+                dto.setCategory(rs.getString("category"));
+                dto.setRegdate(rs.getString("regdate"));
+                dto.setImgfile(rs.getString("imgfile"));
+                dto.setLinkUrl(rs.getString("link_url"));
+                dto.setContent(rs.getString("content"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            DBManager.close(conn, pstmt, rs);
         }
+        return dto;
     }
 }

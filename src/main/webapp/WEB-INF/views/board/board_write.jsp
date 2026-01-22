@@ -10,9 +10,9 @@
 			<div class="form_group">
 				<label for="category">カテゴリー</label>
 				<select id="category" name="category" required class="form_select">
-					<option value="祭りレビュー" selected>祭りレビュー</option>
-					<option value="自由掲示板">自由掲示板</option>
-					<option value="Q&A">Q&A</option>
+					<c:forEach var="cat" items="${categoryList}">
+						<option value="${cat.name}">${cat.name}</option>
+					</c:forEach>
 				</select>
 			</div>
 
@@ -33,7 +33,7 @@
 			
 			<div class="form_group">
 				<label for="content">内容</label>
-				<textarea id="content" name="content" placeholder="楽しい思い出をお聞かせください。" required></textarea>
+				<textarea id="content" name="content" placeholder="楽しい思い出をお聞かせください。"></textarea>
 			</div>
 			
 			<div class="form_actions">
@@ -45,12 +45,36 @@
 </div>
 
 <script>
+$(document).ready(function() {
+    $('#content').summernote({
+        placeholder: '楽しい思い出をお聞かせください。',
+        tabsize: 2,
+        height: 400,
+        lang: 'ja-JP', // 日本語設定
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        callbacks: {
+            onImageUpload: function(files) {
+                // 画像は基本base64保存または別途サーバーアップロードロジックが必要
+                // ここでは一旦基本機能のみ提供
+            }
+        }
+    });
+});
+
 function previewImage(input) {
     const preview = document.getElementById('imagePreview');
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">`;
+            preview.innerHTML = `<img src="${e.target.result}">`;
         }
         reader.readAsDataURL(input.files[0]);
     } else {
@@ -58,9 +82,5 @@ function previewImage(input) {
     }
 }
 </script>
-
-<style>
-/* 既存スタイル削除 - style.cssで共通管理 */
-</style>
 
 <%@ include file="/footer.jsp" %>

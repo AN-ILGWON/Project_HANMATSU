@@ -38,7 +38,9 @@ public class FestivalUpdate implements Command {
 		String endDate = request.getParameter("endDate");
 		String location = request.getParameter("location");
 		String homepage = request.getParameter("homepage");
+		String instagram = request.getParameter("instagram");
 		String mapUrl = request.getParameter("mapUrl");
+		int likes = Integer.parseInt(request.getParameter("likes") != null && !request.getParameter("likes").isEmpty() ? request.getParameter("likes") : "0");
 		
 		FestivalDao dao = new FestivalDao();
 		FestivalDto oldDto = dao.getFestivalByFno(fno);
@@ -86,7 +88,9 @@ public class FestivalUpdate implements Command {
 		dto.setLocation(location);
 		dto.setImgfile(fileName);
 		dto.setHomepage(homepage);
+		dto.setInstagram(instagram);
 		dto.setMapUrl(mapUrl);
+		dto.setLikes(likes);
 		
 		dao.festivalUpdate(dto);
 		

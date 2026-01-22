@@ -5,12 +5,14 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import service.FestivalView;
 
+@WebServlet("/festival/*")
 @MultipartConfig(
 	fileSizeThreshold = 1024 * 1024 * 2, // 2MB
 	maxFileSize = 1024 * 1024 * 10,      // 10MB
@@ -33,6 +35,9 @@ public class FestivalController extends HttpServlet {
 		if(command.equals("/festival/view.do")) {
 			new FestivalView().doCommand(request, response);
 			viewPage = "/WEB-INF/views/festival/festival_view.jsp";
+		} else if(command.equals("/festival/calendar.do")) {
+			new service.FestivalCalendar().doCommand(request, response);
+			viewPage = "/WEB-INF/views/festival/festival_calendar.jsp";
 		} else if(command.equals("/festival/list.do")) {
 			new service.FestivalList().doCommand(request, response);
 			viewPage = "/WEB-INF/views/festival/festival_list.jsp";
@@ -57,14 +62,18 @@ public class FestivalController extends HttpServlet {
 		} else if(command.equals("/festival/delete.do")) {
 			new service.FestivalDelete().doCommand(request, response);
 			return; // redirect internally
-		} else if(command.equals("/festival/apiList.do")) {
-			new service.TourFestivalList().doCommand(request, response);
-			viewPage = "/WEB-INF/views/festival/festival_api_list.jsp";
-		} else if(command.equals("/festival/apiView.do")) {
-			new service.TourFestivalView().doCommand(request, response);
-			viewPage = "/WEB-INF/views/festival/festival_api_view.jsp";
 		} else if(command.equals("/festival/wish.do")) {
 			new service.FestivalWishToggle().doCommand(request, response);
+			return;
+		} else if(command.equals("/festival/setRecommended.do")) {
+			// 権限チェック
+			javax.servlet.http.HttpSession session = request.getSession();
+			String role = (String) session.getAttribute("role");
+			if(!"ADMIN".equals(role)) {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				return;
+			}
+			new service.FestivalSetRecommended().doCommand(request, response);
 			return;
 		}
 		

@@ -13,7 +13,17 @@ public class FestivalDto {
 	private int views; // 閲覧数
 	private String regdate; // 登録日
 	private String homepage; // ホームページURL
+	private String instagram; // インスタグラムURL
 	private String mapUrl; // 地図 URL
+	private int likes; // 찜 수 (관리자 조절 가능)
+	private String isRecommended; // 推奨祭りフラグ ('Y' or 'N')
+	
+	public String getIsRecommended() {
+		return isRecommended;
+	}
+	public void setIsRecommended(String isRecommended) {
+		this.isRecommended = isRecommended;
+	}
 	
 	public int getFno() {
 		return fno;
@@ -81,11 +91,23 @@ public class FestivalDto {
 	public void setHomepage(String homepage) {
 		this.homepage = homepage;
 	}
+	public String getInstagram() {
+		return instagram;
+	}
+	public void setInstagram(String instagram) {
+		this.instagram = instagram;
+	}
 	public String getMapUrl() {
 		return mapUrl;
 	}
 	public void setMapUrl(String mapUrl) {
 		this.mapUrl = mapUrl;
+	}
+	public int getLikes() {
+		return likes;
+	}
+	public void setLikes(int likes) {
+		this.likes = likes;
 	}
 }
 

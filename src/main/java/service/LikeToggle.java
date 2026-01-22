@@ -27,21 +27,26 @@ public class LikeToggle implements Command {
 			return;
 		}
 		
-		int bno = Integer.parseInt(request.getParameter("bno"));
-		
-		LikeDao likeDao = new LikeDao();
-		boolean isLiked = likeDao.isLiked(bno, userid);
-		
-		if(isLiked) {
-			// いいね取り消し
-			likeDao.likeDelete(bno, userid);
-			response.setContentType("text/plain; charset=utf-8");
-			response.getWriter().print("unliked");
-		} else {
-			// いいね追加
-			likeDao.likeInsert(bno, userid);
-			response.setContentType("text/plain; charset=utf-8");
-			response.getWriter().print("liked");
+		try {
+			int bno = Integer.parseInt(request.getParameter("bno"));
+			
+			LikeDao likeDao = new LikeDao();
+			boolean isLiked = likeDao.isLiked(bno, userid);
+			
+			if(isLiked) {
+				// いいね取り消し
+				likeDao.likeDelete(bno, userid);
+				response.setContentType("text/plain; charset=utf-8");
+				response.getWriter().print("unliked");
+			} else {
+				// いいね追加
+				likeDao.likeInsert(bno, userid);
+				response.setContentType("text/plain; charset=utf-8");
+				response.getWriter().print("liked");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing like");
 		}
 	}
 }

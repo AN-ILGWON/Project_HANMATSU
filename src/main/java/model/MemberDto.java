@@ -12,6 +12,7 @@ public class MemberDto {
     private String lastNameKana;
     private String firstNameKana;
     private String role; // 権限 (USER, ADMIN)
+    private String profileImg; // プロフィール画像
     private String regdate;
 
     public String getUserid() {
@@ -19,6 +20,12 @@ public class MemberDto {
     }
     public void setUserid(String userid) {
         this.userid = userid;
+    }
+    public String getProfileImg() {
+        return profileImg;
+    }
+    public void setProfileImg(String profileImg) {
+        this.profileImg = profileImg;
     }
     public String getRole() {
         return role;

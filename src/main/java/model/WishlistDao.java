@@ -14,18 +14,20 @@ public class WishlistDao {
         return instance;
     }
 
-    // 찜하기 추가
+    // お気に入り追加
     public int insertWish(String userid, int fno) {
+        String sql = "INSERT INTO hm_wishlist (wno, userid, fno, wdate) VALUES (hm_wishlist_seq.NEXTVAL, ?, ?, SYSDATE)";
         Connection conn = null;
         PreparedStatement pstmt = null;
-        String sql = "INSERT INTO hm_wishlist (wno, userid, fno) VALUES (hm_wishlist_seq.NEXTVAL, ?, ?)";
         try {
             conn = DBManager.getInstance();
+            if (conn == null) return 0;
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, userid);
             pstmt.setInt(2, fno);
             return pstmt.executeUpdate();
         } catch (Exception e) {
+            System.err.println("[WishlistDao] Error inserting wish: " + e.getMessage());
             e.printStackTrace();
         } finally {
             DBManager.close(conn, pstmt);
@@ -33,18 +35,20 @@ public class WishlistDao {
         return 0;
     }
 
-    // 찜하기 삭제
+    // お気に入り削除
     public int deleteWish(String userid, int fno) {
+        String sql = "DELETE FROM hm_wishlist WHERE userid = ? AND fno = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
-        String sql = "DELETE FROM hm_wishlist WHERE userid = ? AND fno = ?";
         try {
             conn = DBManager.getInstance();
+            if (conn == null) return 0;
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, userid);
             pstmt.setInt(2, fno);
             return pstmt.executeUpdate();
         } catch (Exception e) {
+            System.err.println("[WishlistDao] Error deleting wish: " + e.getMessage());
             e.printStackTrace();
         } finally {
             DBManager.close(conn, pstmt);
@@ -52,20 +56,24 @@ public class WishlistDao {
         return 0;
     }
 
-    // 찜 확인
+    // お気に入り確認
     public boolean isWished(String userid, int fno) {
+        String sql = "SELECT COUNT(*) FROM hm_wishlist WHERE userid = ? AND fno = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        String sql = "SELECT * FROM hm_wishlist WHERE userid = ? AND fno = ?";
         try {
             conn = DBManager.getInstance();
+            if (conn == null) return false;
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, userid);
             pstmt.setInt(2, fno);
             rs = pstmt.executeQuery();
-            return rs.next();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
         } catch (Exception e) {
+            System.err.println("[WishlistDao] Error checking isWished: " + e.getMessage());
             e.printStackTrace();
         } finally {
             DBManager.close(conn, pstmt, rs);
@@ -73,15 +81,26 @@ public class WishlistDao {
         return false;
     }
 
-    // 회원의 찜 목록 가져오기
+    // 会員のお気に入りリストを取得
     public List<FestivalDto> getWishList(String userid) {
         List<FestivalDto> list = new ArrayList<>();
+        String sql = "SELECT f.fno, f.region, f.name, f.description, " +
+                     "TO_CHAR(f.start_date, 'YYYY-MM-DD') as start_date, " +
+                     "TO_CHAR(f.end_date, 'YYYY-MM-DD') as end_date, " +
+                     "f.location, f.imgfile, f.views, TO_CHAR(f.regdate, 'YYYY-MM-DD') as regdate, " +
+                     "f.homepage, f.instagram, f.map_url, f.likes " +
+                     "FROM hm_festival f " +
+                     "JOIN hm_wishlist w ON f.fno = w.fno " +
+                     "WHERE w.userid = ? " +
+                     "ORDER BY w.wdate DESC, w.wno DESC";
+        
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        String sql = "SELECT f.* FROM hm_festival f JOIN hm_wishlist w ON f.fno = w.fno WHERE w.userid = ? ORDER BY w.wdate DESC";
+        
         try {
             conn = DBManager.getInstance();
+            if (conn == null) return list;
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, userid);
             rs = pstmt.executeQuery();
@@ -98,10 +117,13 @@ public class WishlistDao {
                 dto.setViews(rs.getInt("views"));
                 dto.setRegdate(rs.getString("regdate"));
                 dto.setHomepage(rs.getString("homepage"));
+                dto.setInstagram(rs.getString("instagram"));
                 dto.setMapUrl(rs.getString("map_url"));
+                dto.setLikes(rs.getInt("likes"));
                 list.add(dto);
             }
         } catch (Exception e) {
+            System.err.println("[WishlistDao] Error getting wishlist for user " + userid + ": " + e.getMessage());
             e.printStackTrace();
         } finally {
             DBManager.close(conn, pstmt, rs);

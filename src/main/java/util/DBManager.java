@@ -9,7 +9,7 @@ public class DBManager {
 
 	public static Connection getInstance() {
 		Connection conn = null;
-		String driver = "oracle.jdbc.driver.OracleDriver";
+		String driver = "oracle.jdbc.OracleDriver";
 		String url = "jdbc:oracle:thin:@localhost:1521:xe";
 		String user = "jsl26";
 		String pw = "1234";

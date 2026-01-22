@@ -40,8 +40,14 @@ public class MemberMyPage implements Command {
 		model.WishlistDao wishlistDao = model.WishlistDao.getInstance();
 		List<model.FestivalDto> myWishlist = wishlistDao.getWishList(userid);
 		
+		// 4. 会員情報の取得 (プロフィール画像など)
+		model.MemberDao memberDao = new model.MemberDao();
+		model.MemberDto member = memberDao.searchUserId(userid);
+		session.setAttribute("profileImg", member.getProfileImg());
+		
 		request.setAttribute("myReplies", myReplies);
 		request.setAttribute("recentVisited", recentVisited);
 		request.setAttribute("myWishlist", myWishlist);
+		request.setAttribute("member", member);
 	}
 }

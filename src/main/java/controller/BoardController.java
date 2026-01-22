@@ -5,9 +5,11 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import service.BoardDelete;
 import service.BoardList;
@@ -19,6 +21,7 @@ import service.ReplyDelete;
 import service.ReplyUpdate;
 import service.ReplyWrite;
 
+@WebServlet("/board/*")
 @MultipartConfig(
 	fileSizeThreshold = 1024 * 1024 * 2, // 2MB
 	maxFileSize = 1024 * 1024 * 10,      // 10MB
@@ -59,9 +62,11 @@ public class BoardController extends HttpServlet {
 		switch(uri) {
 		case "/list.do":
 			new BoardList().doCommand(request, response);
+			request.setAttribute("categoryList", new model.CategoryDao().getAllCategories());
 			page = "/WEB-INF/views/board/board_list.jsp";
 			break;
 		case "/write.do":
+			request.setAttribute("categoryList", new model.CategoryDao().getAllCategories());
 			page = "/WEB-INF/views/board/board_write.jsp";
 			break;
 		case "/writepro.do":
@@ -73,6 +78,7 @@ public class BoardController extends HttpServlet {
 			break;
 		case "/update.do":
 			new BoardView().doCommand(request, response);
+			request.setAttribute("categoryList", new model.CategoryDao().getAllCategories());
 			page = "/WEB-INF/views/board/board_update.jsp";
 			break;
 		case "/updatepro.do":
@@ -83,6 +89,18 @@ public class BoardController extends HttpServlet {
 			break;
 		case "/like.do":
 			new LikeToggle().doCommand(request, response);
+			break;
+		case "/likeUpdate.do":
+			// 管理者によるいいね数直接更新
+			HttpSession session = request.getSession();
+			String role = (String) session.getAttribute("role");
+			if(!"ADMIN".equals(role)) {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				return;
+			}
+			int bno_update = Integer.parseInt(request.getParameter("bno"));
+			int likes = Integer.parseInt(request.getParameter("likes"));
+			new model.BoardDao().updateLikeCount(bno_update, likes);
 			break;
 		case "/replyInsert.do":
 			new ReplyWrite().doCommand(request, response);
