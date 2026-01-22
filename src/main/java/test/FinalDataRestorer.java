@@ -52,7 +52,7 @@ public class FinalDataRestorer {
             // 메인 배너 데이터 (이미지 경로 수정 반영)
             String bannerSql = "INSERT INTO hm_banner (bano, title, subtitle, imgfile, link_url, order_no, is_active) VALUES (hm_banner_seq.NEXTVAL, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(bannerSql)) {
-                // Banner 1 - Cherry Blossom (Fixed UUID)
+                // 벚꽃 축제 배너
                 pstmt.setString(1, "🌸 桜色に染まる、夢の韓旅へ 🌸");
                 pstmt.setString(2, "36万本の桜가 織りなす、ロマンチックな春の散歩道。");
                 pstmt.setString(3, "banner/7cc67013-9470-43aa-9a26-7fb42fb2f15b_진해벚꽃.jpg");
@@ -61,7 +61,7 @@ public class FinalDataRestorer {
                 pstmt.setString(6, "Y");
                 pstmt.executeUpdate();
 
-                // Banner 2 - Slide 1
+                // 슬라이드 배너 1
                 pstmt.setString(1, "✨ きらめくお祭りの魔法にかかって ✨");
                 pstmt.setString(2, "泥まみれになって笑い合えば、最高の夏の思い出に！");
                 pstmt.setString(3, "banner/4a55da82-a115-4176-8ae5-24eab05a3695_슬라이드 배너1.jpg");
@@ -70,7 +70,7 @@ public class FinalDataRestorer {
                 pstmt.setString(6, "Y");
                 pstmt.executeUpdate();
 
-                // Banner 3 - Slide 2
+                // 슬라이드 배너 2
                 pstmt.setString(1, "🔥 夜空を焦がす、神秘的な火の祭典 🔥");
                 pstmt.setString(2, "燃え上がる山に願いを込めて、忘れられない感動を.");
                 pstmt.setString(3, "banner/d33c3d74-b068-4f83-b004-ed103f659cdb_슬라이드 배너2.jpg");
@@ -79,7 +79,7 @@ public class FinalDataRestorer {
                 pstmt.setString(6, "Y");
                 pstmt.executeUpdate();
 
-                // Banner 4 - Hot Springs
+                // 온천 배너
                 pstmt.setString(1, "♨️ 心も体もぽかぽか、癒やしの名湯巡り ♨️");
                 pstmt.setString(2, "伝統ある温泉で、日常の疲れを優しく解きほぐして。");
                 pstmt.setString(3, "banner/daa7c14f-b9db-4977-97e0-76ffdc2bdb08_석모도온천_배너.jpg");
@@ -92,7 +92,7 @@ public class FinalDataRestorer {
             // 게시판 샘플 포스팅
             String boardSql = "INSERT INTO hm_board (bno, userid, category, title, content, imgfile, regdate, views, likes) VALUES (hm_board_seq.NEXTVAL, ?, ?, ?, ?, ?, SYSDATE, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(boardSql)) {
-                // Post 1 - Cherry Blossom
+                // 진해 벚꽃 후기 포스팅
                 pstmt.setString(1, "kawaii_matsuri");
                 pstmt.setString(2, "祭りレビュー");
                 pstmt.setString(3, "🌸 桜の精霊に会いに来ちゃった！鎮海の桜、満開だにゃん 🌸");
@@ -102,7 +102,7 @@ public class FinalDataRestorer {
                 pstmt.setInt(7, 45);
                 pstmt.executeUpdate();
 
-                // Post 2 - Olive Young
+                // 올리브영 쇼핑 후기
                 pstmt.setString(1, "beauty_otaku");
                 pstmt.setString(2, "自由掲示板");
                 pstmt.setString(3, "✨ オリーブヤングで「可愛さ」を爆買いしちゃったにゃん ✨");
@@ -112,7 +112,7 @@ public class FinalDataRestorer {
                 pstmt.setInt(7, 55);
                 pstmt.executeUpdate();
 
-                // Post 3 - Seongsu Cafe
+                // 성수동 카페 방문기
                 pstmt.setString(1, "kawaii_matsuri");
                 pstmt.setString(2, "祭りレビュー");
                 pstmt.setString(3, "☕ 聖水のカフェで, ほっこり癒やしのティータイム ☕");
@@ -122,7 +122,7 @@ public class FinalDataRestorer {
                 pstmt.setInt(7, 32);
                 pstmt.executeUpdate();
 
-                // Post 4 - Hot Spring (Fixed Path)
+                // 겨울 온천 여행 후기
                 pstmt.setString(1, "kawaii_matsuri");
                 pstmt.setString(2, "祭りレビュー");
                 pstmt.setString(3, "♨️ 冬の温泉旅行、心も体もぽかぽかに ✨");
@@ -136,7 +136,7 @@ public class FinalDataRestorer {
             // 축제 상세 정보 등록
             String festSql = "INSERT INTO hm_festival (fno, region, name, description, start_date, end_date, location, imgfile, views, regdate, homepage, instagram, map_url, likes, is_recommended) VALUES (hm_festival_seq.NEXTVAL, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?, SYSDATE, ?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(festSql)) {
-                // Festival 1 - Jinhae Cherry Blossom (Recommended)
+                // 진해 군항제 (추천 축제)
                 pstmt.setString(1, "慶尚南道");
                 pstmt.setString(2, "鎮海軍港祭 (진해군항제)");
                 pstmt.setString(3, "36万本の桜が咲き誇る、韓国最大の桜祭りです。");
@@ -152,7 +152,7 @@ public class FinalDataRestorer {
                 pstmt.setString(13, "Y");
                 pstmt.executeUpdate();
 
-                // Festival 2 - Boryeong Mud Festival
+                // 보령 머드 축제
                 pstmt.setString(1, "忠清南道");
                 pstmt.setString(2, "保寧マッドフェスティバル (보령머드축제)");
                 pstmt.setString(3, "世界中の人が集まる、エネルギッシュな泥の祭典！");
@@ -168,7 +168,7 @@ public class FinalDataRestorer {
                 pstmt.setString(13, "N");
                 pstmt.executeUpdate();
 
-                // Festival 5 - Andong Mask Dance Festival
+                // 안동 탈춤 페스티벌
                 pstmt.setString(1, "慶尚北道");
                 pstmt.setString(2, "安東国際仮面舞フェスティバル (안동국제탈춤페스티벌)");
                 pstmt.setString(3, "伝統的な仮面舞踊と現代のパフォーマンスが融合したお祭り！");
@@ -184,7 +184,7 @@ public class FinalDataRestorer {
                 pstmt.setString(13, "N");
                 pstmt.executeUpdate();
 
-                // Festival 6 - Busan Fireworks Festival
+                // 부산 불꽃 축제
                 pstmt.setString(1, "釜山");
                 pstmt.setString(2, "釜山花火大会 (부산불꽃축제)");
                 pstmt.setString(3, "広安大橋を背景に繰り広げられる、幻想的な光の饗宴。");
@@ -200,7 +200,7 @@ public class FinalDataRestorer {
                 pstmt.setString(13, "N");
                 pstmt.executeUpdate();
 
-                // Festival 7 - Hwacheon Sancheoneo Ice Festival
+                // 화천 산천어 축제
                 pstmt.setString(1, "江原道");
                 pstmt.setString(2, "華川山魚氷まつり (화천산천어축제)");
                 pstmt.setString(3, "氷の上で釣りを楽しむ、韓国を代表する冬の祭典！");
@@ -216,7 +216,7 @@ public class FinalDataRestorer {
                 pstmt.setString(13, "N");
                 pstmt.executeUpdate();
 
-                // Festival 3 - Jeju Fire Festival
+                // 제주 들불 축제
                 pstmt.setString(1, "済州道");
                 pstmt.setString(2, "済州野火まつり (제주들불축제)");
                 pstmt.setString(3, "無病息災を祈り、山을 燃やす幻想的なお祭り。");
@@ -232,7 +232,7 @@ public class FinalDataRestorer {
                 pstmt.setString(13, "N");
                 pstmt.executeUpdate();
 
-                // Festival 4 - Winter Strawberry Festival (This Month: January 2026)
+                // 논산 딸기 축제
                 pstmt.setString(1, "忠清南道");
                 pstmt.setString(2, "論山イチゴ祭り (논산딸기축제)");
                 pstmt.setString(3, "甘〜いイチゴの香りに包まれて、幸せな冬のひとときを。");
