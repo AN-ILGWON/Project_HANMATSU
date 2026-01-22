@@ -22,10 +22,59 @@
   - JDBC (DBManager)
   - JSTL 1.2
   - cos (ファイルアップロード用)
-  - jBcrypt (パスワードの安全な暗호化)
-  - JSON (データ処理)
+  - jBcrypt (パスワードの安全な暗号化)
+  - JSON (데이터 처리)
 - **Frontend**: HTML5, CSS3, JavaScript (jQuery 3.7.1)
 - **Environment**: Apache Tomcat 9
+
+## 📊 データベース設計 (ERD)
+
+プロジェクトのデータ構造を以下に示します。詳細は [SQL_CREATE_TABLES.sql](SQL_CREATE_TABLES.sql) を参照してください。
+
+```mermaid
+erDiagram
+    HM_MEMBER ||--o{ HM_BOARD : "writes"
+    HM_MEMBER ||--o{ HM_WISHLIST : "adds"
+    HM_MEMBER ||--o{ HM_VISITED : "logs"
+    HM_MEMBER ||--o{ HM_BOARD_LIKE : "likes"
+    HM_MEMBER ||--o{ HM_REPLY : "comments"
+    
+    HM_FESTIVAL ||--o{ HM_WISHLIST : "stored_in"
+    
+    HM_BOARD ||--o{ HM_BOARD_LIKE : "received_likes"
+    HM_BOARD ||--o{ HM_REPLY : "has_comments"
+
+    HM_MEMBER {
+        string userid PK
+        string password
+        string nickname
+        string email
+        string role
+    }
+    HM_FESTIVAL {
+        number fno PK
+        string name
+        string region
+        date start_date
+        date end_date
+    }
+    HM_BOARD {
+        number bno PK
+        string userid FK
+        string title
+        clob content
+    }
+    HM_NEWS {
+        number nno PK
+        string title
+        string category
+    }
+    HM_BANNER {
+        number bano PK
+        string title
+        string imgfile
+    }
+```
 
 ## 🚀 実行方法
 1. Oracle Databaseで `SQL_CREATE_TABLES.sql` を実行してテーブルを作成します。
